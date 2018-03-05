@@ -25,7 +25,7 @@ def worker(number_of_runs):
    
         msg_queue = WORKFLOW_NAME
         num_msgs = 1
-        msg_dict = { 'Dataset':'abc', 'Project':'123', 'Run':irun }
+        msg_dict = { 'data_dir':'/tmp/MNIST_data', 'num_images':'100', 'output_file':'output-%s.txt' % irun, 'Run':irun }
    
         publish_messages(msg_queue, num_msgs, msg_dict)
    

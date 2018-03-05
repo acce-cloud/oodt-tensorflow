@@ -36,6 +36,7 @@ def main(_):
   # Import data
   mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
   num_images = FLAGS.num_images
+  output_file = FLAGS.output_file
 
   # Create the model
   x = tf.placeholder(tf.float32, [None, 784])
@@ -72,7 +73,7 @@ def main(_):
   result = sess.run(accuracy, feed_dict={x: mnist.test.images,
                                          y_: mnist.test.labels})
   # Write result to file
-  with open("output.txt", "w") as file: 
+  with open(output_file, "w") as file: 
     file.write(str(result))
 
 if __name__ == '__main__':
@@ -81,5 +82,7 @@ if __name__ == '__main__':
                       help='Directory for storing input data')
   parser.add_argument('--num_images', type=int, default='1000',
                       help='Number of images')
+  parser.add_argument('--output_file', type=str, default="output.txt",
+                      help='Output file')
   FLAGS, unparsed = parser.parse_known_args()
   tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
