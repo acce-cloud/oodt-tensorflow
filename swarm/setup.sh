@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script to create a Docker Swarm of VMs provisioned on the local host with VirtualBox
 
-num_nodes=2
+num_nodes=4
 
 # create all VMs
 for i in `seq 1 $num_nodes`;
@@ -24,4 +24,5 @@ do
    eval $(docker-machine env node$i)
    docker swarm join --token $token_worker $MANAGER_IP:2377
 done
+eval $(docker-machine env node1)
 docker node ls
