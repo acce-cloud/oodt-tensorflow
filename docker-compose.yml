@@ -1,0 +1,66 @@
+# Docker compose file for running the TensorFlow workflow on a single Docker host
+ 
+version: '3.1'
+
+services:
+
+  oodt-filemgr:
+    image: acce/oodt-filemgr:${ACCE_VERSION}
+    container_name: filemgr
+    expose:
+      - "9000"
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      # shared data volumes
+      - jobs:/usr/local/oodt/pges/tensorflow/jobs
+      - archive:/usr/local/oodt/archive
+
+  oodt-wmgr:
+    image: acce/oodt-wmgr-tensorflow:${ACCE_VERSION}
+    container_name: wmgr
+    expose:
+      - "9001"
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      - ./workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
+      - ./pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
+      # custom supervisor configuration which starts the RMQ client
+      - ./conf/supervisord.conf:/etc/supervisor/supervisord.conf
+      # shared data volumes
+      - jobs:/usr/local/oodt/pges/tensorflow/jobs
+      - archive:/usr/local/oodt/archive
+    environment:
+      - "FILEMGR_URL=http://oodt-filemgr:9000/"
+      - "WORKFLOW_URL=http://localhost:9001/"
+      - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@oodt-rabbitmq/%2f"
+      - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@oodt-rabbitmq:15672"
+      - "WORKFLOW_QUEUE=tensorflow"
+      - "MAX_WORKFLOWS=2"
+    depends_on:
+      - oodt-rabbitmq
+
+  # RabbitMQ server
+  oodt-rabbitmq:
+    image: acce/oodt-rabbitmq:${ACCE_VERSION}
+    container_name: rabbitmq
+    expose:
+      - "5672"
+      - "15672"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@localhost/%2f"
+      - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@localhost:15672"
+    volumes:
+      # driver program to submit workflows
+      - ./rabbitmq_clients/tensorflow_driver.py:/usr/local/oodt/rabbitmq/tensorflow_driver.py
+
+# shared data volumes
+volumes:
+  jobs:
+  archive:
