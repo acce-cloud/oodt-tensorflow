@@ -1,0 +1,81 @@
+# Docker stack file for running the sample TensorFlow workflow on a Docker Swarm of multiple hosts
+#
+# docker stack deploy -c docker-stack.yml oodt-stack
+# docker stack rm oodt-stack
+
+version: '3.1'
+
+networks:
+   swarm-network:
+
+services:
+
+  # file manager on swarm manager node
+  oodt-filemgr:
+    image: acce/oodt-filemgr:${ACCE_VERSION}
+    networks: 
+      - swarm-network
+    ports:
+      - "9000:9000"
+    # shared volumes must be cross-mounted on all nodes
+    volumes:
+      - $OODT_CONFIG/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      - $OODT_ARCHIVE:/usr/local/oodt/archive
+      - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
+
+  # RabbitMQ server on swarm manager node
+  oodt-rabbitmq:
+    image: acce/oodt-rabbitmq:${ACCE_VERSION}
+    networks:
+      - swarm-network
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@localhost/%2f"
+      - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@localhost:15672"
+    volumes:
+      # driver program to submit workflows
+      - $OODT_CONFIG/rabbitmq_clients/tensorflow_driver.py:/usr/local/oodt/rabbitmq/tensorflow_driver.py
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
+
+  # workflow manager on worker nodes
+  oodt-wmgr:
+    image: acce/oodt-wmgr-tensorflow:${ACCE_VERSION}
+    networks:
+      - swarm-network
+    ports:
+      - "9001:9001"
+    # shared volumes must be cross-mounted on all nodes
+    volumes:
+      - $OODT_CONFIG/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      - $OODT_CONFIG/workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
+      - $OODT_CONFIG/pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
+      # custom supervisor configuration which starts the RMQ client
+      - $OODT_CONFIG/conf/supervisord.conf:/etc/supervisor/supervisord.conf
+      - $OODT_ARCHIVE:/usr/local/oodt/archive
+      - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
+      - $TENSORFLOW_DATA:/tmp/MNIST_data
+    environment:
+      - "FILEMGR_URL=http://oodt-filemgr:9000/"
+      - "WORKFLOW_URL=http://localhost:9001/"
+      - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@oodt-rabbitmq/%2f"
+      - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@oodt-rabbitmq:15672"
+      - "WORKFLOW_QUEUE=tensorflow"
+      - "MAX_WORKFLOWS=1"
+    depends_on:
+      - oodt-rabbitmq
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [ node.role != manager ]
