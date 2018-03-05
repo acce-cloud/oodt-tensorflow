@@ -10,6 +10,7 @@
 	</exe>
 
 	<customMetadata>
+		<metadata key="ProductType" val="TensorflowProduct" />
 		<metadata key="ProductionDateTime" val="[DATE.UTC]" />
 		<metadata key="JobDir" val="[PGE_ROOT]/tensorflow/jobs/[JobId]" />
 	</customMetadata>

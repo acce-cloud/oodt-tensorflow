@@ -33,6 +33,8 @@ services:
       # shared data volumes
       - jobs:/usr/local/oodt/pges/tensorflow/jobs
       - archive:/usr/local/oodt/archive
+      # FIXME
+      - /Users/cinquini/workbench/tensorflow_tutorial_1/MNIST_data:/tmp/MNIST_data
     environment:
       - "FILEMGR_URL=http://oodt-filemgr:9000/"
       - "WORKFLOW_URL=http://localhost:9001/"
