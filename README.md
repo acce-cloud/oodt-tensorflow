@@ -55,9 +55,9 @@ Also, define the versions of the containers to use:
 # Multiple Hosts deployment
 
 * Create a Swarm of N nodes.
-  For example, to create a Swarm of N Virtual Machine on a Mac OSX laptop:
+  For example, to create a Swarm of N virtual machines on a Mac OSX laptop:
 
-      ./swarm.setup.sh
+      ./swarm/setup.sh
 
 * optional: pre-pull images to each node:
 
@@ -71,7 +71,7 @@ Also, define the versions of the containers to use:
 
       docker stack deploy -c docker-stack.yml oodt-stack
 
-* optional: scale the OODT WM service:
+* optional: scale the OODT Workflow Manager service:
 
       docker service scale oodt-stack_oodt-wmgr=3
 
@@ -85,4 +85,4 @@ Also, define the versions of the containers to use:
 
 * cleanup:
 
-      swarm/cleanup.sh
+      ./swarm/cleanup.sh
