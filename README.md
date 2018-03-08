@@ -2,7 +2,7 @@
 
 Sample application for executing a demo Tensorflow workflow within the ACCE/OODT/Docker architecture.
 
-# Setup
+# Setup (for both Single Host and Multiple Host deployments)
 
 Define some environment variables pointing to the location of the OODT workflow configuration,
 the TensorFlow input data, and the output data. All directories MUST exist, and must be
@@ -52,39 +52,37 @@ Also, define the versions of the containers to use:
 
       docker-compose down
 
-# Multiple Hosts
+# Multiple Hosts deployment
 
-o create a Swarm of N VMs
+* Create a Swarm of N nodes.
+  For example, to create a Swarm of N Virtual Machine on a Mac OSX laptop:
 
-./swarm.setup.sh
+      ./swarm.setup.sh
 
-o optional: pre-pull images to each node:
+* optional: pre-pull images to each node:
 
-docker pull acce/oodt-node:${ACCE_VERSION}
-docker pull acce/oodt-filemgr:${ACCE_VERSION}
-docker pull acce/oodt-rabbitmq:${ACCE_VERSION}
-docker pull acce/oodt-wmgr-tensorflow:${ACCE_VERSION}
+      eval $(docker-machine env node1)
+      docker pull acce/oodt-node:${ACCE_VERSION}
+      docker pull acce/oodt-filemgr:${ACCE_VERSION}
+      docker pull acce/oodt-rabbitmq:${ACCE_VERSION}
+      docker pull acce/oodt-wmgr-tensorflow:${ACCE_VERSION}
 
+* deploy the stack
 
-o deploy the stack
+      docker stack deploy -c docker-stack.yml oodt-stack
 
-docker stack deploy -c docker-stack.yml oodt-stack
+* optional: scale the OODT WM service:
 
-o optional: scale the OODT WM service:
+      docker service scale oodt-stack_oodt-wmgr=3
 
-docker service scale oodt-stack_oodt-wmgr=3
+* submit the workflows:
 
-o submit the workflows:
+      cids=`docker ps | grep oodt-rabbitmq | awk '{print $1}' | awk '{print $1}'`
+      cid=`echo $cids | awk '{print $1;}'`
+      echo $cid
+      export NJOBS=10
+      docker exec -i $cid sh -c "cd /usr/local/oodt/rabbitmq; python ./tensorflow_driver.py $NJOBS"
 
-cids=`docker ps | grep oodt-rabbitmq | awk '{print $1}' | awk '{print $1}'`
-cid=`echo $cids | awk '{print $1;}'`
-echo $cid
+* cleanup:
 
-export NJOBS=10
-docker exec -i $cid sh -c "cd /usr/local/oodt/rabbitmq; python ./tensorflow_driver.py $NJOBS"
-
-
-
-o cleanup:
-
-swarm/cleanup.sh
+      swarm/cleanup.sh
