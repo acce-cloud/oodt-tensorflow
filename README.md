@@ -10,10 +10,10 @@ accessible from all hosts where the containers will be running.
 
 For example:
 
-export OODT_CONFIG=~/eclipse-workspace/oodt-tensorflow
-export TENSORFLOW_DATA=~/data/TENSORFLOW/MNIST_data
-export OODT_ARCHIVE=~/data/TENSORFLOW/archive
-export OODT_JOBS=~/data/TENSORFLOW/jobs
+export OODT_CONFIG=$HOME/eclipse-workspace/oodt-tensorflow
+export TENSORFLOW_DATA=$HOME/data/TENSORFLOW/MNIST_data
+export OODT_ARCHIVE=$HONE/data/TENSORFLOW/archive
+export OODT_JOBS=$HOME/data/TENSORFLOW/jobs
 mkdir -p $OODT_ARCHIVE
 mkdir -p $OODT_JOBS
 
