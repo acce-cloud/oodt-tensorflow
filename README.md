@@ -10,16 +10,16 @@ accessible from all hosts where the containers will be running.
 
 For example:
 
-export OODT_CONFIG=$HOME/eclipse-workspace/oodt-tensorflow
-export TENSORFLOW_DATA=$HOME/data/TENSORFLOW/MNIST_data
-export OODT_ARCHIVE=$HONE/data/TENSORFLOW/archive
-export OODT_JOBS=$HOME/data/TENSORFLOW/jobs
-mkdir -p $OODT_ARCHIVE
-mkdir -p $OODT_JOBS
+    export OODT_CONFIG=$HOME/eclipse-workspace/oodt-tensorflow
+    export TENSORFLOW_DATA=$HOME/data/TENSORFLOW/MNIST_data
+    export OODT_ARCHIVE=$HONE/data/TENSORFLOW/archive
+    export OODT_JOBS=$HOME/data/TENSORFLOW/jobs
+    mkdir -p $OODT_ARCHIVE
+    mkdir -p $OODT_JOBS
 
 Also, define the versions of th containers to use:
 
-export ACCE_VERSION=2.0
+    export ACCE_VERSION=2.0
 
 # Single Host
 
