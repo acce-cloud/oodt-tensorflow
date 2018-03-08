@@ -17,32 +17,35 @@ For example:
     mkdir -p $OODT_ARCHIVE
     mkdir -p $OODT_JOBS
 
-Also, define the versions of th containers to use:
+Also, define the versions of the containers to use:
 
     export ACCE_VERSION=2.0
 
-# Single Host
+# Single Host deployment
 
 * Start the OODT containers on a single host:
-  * docker-compose up -d
-  * docker-compose logs -f
+    docker-compose up -d
+    docker-compose logs -f
 
 * To run the Tensorflow script directly from inside the Workflow Manager container:
-  * docker exec -it wmgr /bin/bash
-  * cd $PGE_ROOT/tensorflow/pges
-  * python mnist_softmax.py --data_dir /tmp/MNIST_data --num_images 100 --output_file output.txt
-  * cat output.txt
-  * Note: MNIST_data will be downloaded automatically to the specified "data_dir" directory, if not existing already
+    docker exec -it wmgr /bin/bash
+    cd $PGE_ROOT/tensorflow/pges
+    python mnist_softmax.py --data_dir /tmp/MNIST_data --num_images 100 --output_file output.txt
+    cat output.txt
+    Note: MNIST_data will be downloaded automatically to the specified "data_dir" directory, if not existing already
 
 * To run the Tensorflow script one time only as a workflow, from inside the Workflow Manager container:
-  * docker exec -it wmgr /bin/bash
-  * cd $OODT_HOME/cas-worklfow/bin
-  * ./wmgr-client --url http://localhost:9001 --operation --sendEvent --eventName tensorflow --metaData --key num_images 100 --key data_dir /tmp/MNIST_data --output_file output.txt
+    docker exec -it wmgr /bin/bash
+    cd $OODT_HOME/cas-worklfow/bin
+    ./wmgr-client --url http://localhost:9001 --operation --sendEvent --eventName tensorflow --metaData --key num_images 100 --key data_dir /tmp/MNIST_data --output_file output.txt
 
 * To execute N instances of the workflow, running the driver script from inside the RabbitMQ container:
-  * export NJOBS=10
-  * docker exec -i rabbitmq sh -c "cd /usr/local/oodt/rabbitmq; python ./tensorflow_driver.py $NJOBS"
-  * docker exec -it filemgr sh -c "ls -l /usr/local/oodt/archive/tensorflow/"
+    export NJOBS=10
+    docker exec -i rabbitmq sh -c "cd /usr/local/oodt/rabbitmq; python ./tensorflow_driver.py $NJOBS"
+    ls -l $OODT_ARCHIVE/tensorflow
+
+* To stop the containers:
+    docker-compose down
 
 # Multiple Hosts
 
