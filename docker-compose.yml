@@ -12,7 +12,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - $OODT_CONFIG/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      - $PWD/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
       # shared data volumes
       - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
       - $OODT_ARCHIVE:/usr/local/oodt/archive
@@ -25,11 +25,13 @@ services:
     ports:
       - "9001:9001"
     volumes:
-      - $OODT_CONFIG/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
-      - $OODT_CONFIG/workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
-      - $OODT_CONFIG/pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
+      # workflow specification
+      - $PWD/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      - $PWD/workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
+      # executable
+      - $PWD/pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
       # custom supervisor configuration which starts the RMQ client
-      - $OODT_CONFIG/conf/supervisord.conf:/etc/supervisor/supervisord.conf
+      - $PWD/conf/supervisord.conf:/etc/supervisor/supervisord.conf
       # shared data volumes
       - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
       - $OODT_ARCHIVE:/usr/local/oodt/archive
@@ -59,4 +61,4 @@ services:
       - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@localhost:15672"
     volumes:
       # driver program to submit workflows
-      - $OODT_CONFIG/rabbitmq_clients/tensorflow_driver.py:/usr/local/oodt/rabbitmq/tensorflow_driver.py
+      - $PWD/rabbitmq_clients/tensorflow_driver.py:/usr/local/oodt/rabbitmq/tensorflow_driver.py
