@@ -1,0 +1,83 @@
+# Kubernetes deployment file for OODT Workflow Manager server
+apiVersion: v1
+kind: Service
+metadata:
+  name: wmgr
+  labels:
+    stack: acce
+    component: wmgr
+spec:
+  type: NodePort
+  ports:
+  - port: 9001
+    targetPort: 9001
+    protocol: TCP
+    name: xmlrpc
+  selector:
+    stack: acce
+    component: wmgr
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: oodt-wmgr
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        stack: acce
+        component: wmgr
+    spec:
+      containers:
+      - name: wmgr
+        image: acce/oodt-wmgr-tensorflow:2.0
+        ports:
+        - containerPort: 9001
+        env:
+        # example connection URL for rabbitmq message producers - override as needed
+        - name: RABBITMQ_USER_URL
+          value: "amqp://oodt-user:changeit@rabbitmq/%2f"
+        - name: RABBITMQ_ADMIN_URL
+          value: "http://oodt-admin:changeit@rabbitmq:15672"
+        - name: FILEMGR_URL
+          value: "http://filemgr:9000/"
+        - name: WORKFLOW_URL
+          value: "http://localhost:9001/"
+        - name: WORKFLOW_QUEUE
+          value: "tensorflow"
+        - name: MAX_WORKFLOWS
+          value: "2"
+        volumeMounts:
+        - name: oodt-archive 
+          mountPath: /usr/local/oodt/archive/
+        - name: oodt-jobs
+          mountPath: /usr/local/oodt/jobs/
+        - name: supervisor-conf
+          mountPath: /etc/supervisor/
+        - name: tensorflow-config
+          mountPath: /usr/local/oodt/workflows/tensorflow
+        - name: tensorflow-pges
+          mountPath: /usr/local/oodt/pges/tensorflow/pges
+      volumes:
+      - name: oodt-jobs
+        # minikube mount $HOME/data/jobs/:/usr/local/oodt/jobs/
+        hostPath:
+          path: /usr/local/oodt/jobs
+      - name: oodt-archive
+        # minikube mount $HOME/data/archive/:/usr/local/oodt/archive/
+        hostPath:
+          path: /usr/local/oodt/archive
+      - name: supervisor-conf
+        # minikube mount $PWD/../conf/supervisor:/etc/supervisor/
+        hostPath:
+          path: /etc/supervisor/
+      - name: tensorflow-config
+        # minikube mount $PWD/../workflows/tensorflow/:/workflows/tensorflow/
+        hostPath:
+          path: /workflows/tensorflow/
+      - name: tensorflow-pges
+        # minikube mount $PWD/../pges/tensorflow/:/tensorflow/pges/
+        hostPath:
+          path: /tensorflow/pges/
+      
