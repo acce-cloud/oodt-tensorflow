@@ -26,12 +26,12 @@ services:
       - "9001:9001"
     volumes:
       # workflow specification
-      - $PWD/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
-      - $PWD/workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
+      #- $PWD/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
+      #- $PWD/workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
       # executable
-      - $PWD/pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
+      #- $PWD/pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
       # custom supervisor configuration which starts the RMQ client
-      - $PWD/conf/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf
+      #- $PWD/conf/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf
       # shared data volumes
       - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
       - $OODT_ARCHIVE:/usr/local/oodt/archive

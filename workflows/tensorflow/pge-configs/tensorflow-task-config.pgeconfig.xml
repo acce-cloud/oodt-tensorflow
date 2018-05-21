@@ -6,13 +6,13 @@
 		<!-- load Python virtual environment with tensorflow -->
 		<cmd>. [OODT_VENV]/bin/activate</cmd> -->
 		<!-- execute script  -->
-		<cmd>python [PGE_ROOT]/tensorflow/pges/mnist_softmax.py --data_dir [data_dir] --num_images [num_images] --output_file [output_file]</cmd>
+		<cmd>python [PGE_ROOT]/tensorflow/mnist_softmax.py --data_dir [data_dir] --num_images [num_images] --output_file [output_file]</cmd>
 	</exe>
 
 	<customMetadata>
 		<metadata key="ProductType" val="TensorflowProduct" />
 		<metadata key="ProductionDateTime" val="[DATE.UTC]" />
-		<metadata key="JobDir" val="[PGE_ROOT]/tensorflow/jobs/[JobId]" />
+		<metadata key="JobDir" val="[OODT_HOME]/jobs/tensorflow/[JobId]" />
 	</customMetadata>
 
 	<!-- CAS Crawler directives -->
