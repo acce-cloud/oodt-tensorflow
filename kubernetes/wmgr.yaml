@@ -53,12 +53,12 @@ spec:
           mountPath: /usr/local/oodt/archive/
         - name: oodt-jobs
           mountPath: /usr/local/oodt/jobs/
-        - name: supervisor-conf
-          mountPath: /etc/supervisor/
-        - name: tensorflow-config
-          mountPath: /usr/local/oodt/workflows/tensorflow
-        - name: tensorflow-pges
-          mountPath: /usr/local/oodt/pges/tensorflow/pges
+        #- name: supervisor-conf
+        #  mountPath: /etc/supervisor/
+        #- name: tensorflow-config
+        #  mountPath: /usr/local/oodt/workflows/tensorflow
+        #- name: tensorflow-pges
+        #  mountPath: /usr/local/oodt/pges/tensorflow/pges
       volumes:
       - name: oodt-jobs
         # minikube mount $HOME/data/jobs/:/usr/local/oodt/jobs/
@@ -68,16 +68,16 @@ spec:
         # minikube mount $HOME/data/archive/:/usr/local/oodt/archive/
         hostPath:
           path: /usr/local/oodt/archive
-      - name: supervisor-conf
+      #- name: supervisor-conf
         # minikube mount $PWD/../conf/supervisor:/etc/supervisor/
-        hostPath:
-          path: /etc/supervisor/
-      - name: tensorflow-config
+      #  hostPath:
+      #    path: /etc/supervisor/
+      #- name: tensorflow-config
         # minikube mount $PWD/../workflows/tensorflow/:/workflows/tensorflow/
-        hostPath:
-          path: /workflows/tensorflow/
-      - name: tensorflow-pges
+      #  hostPath:
+      #    path: /workflows/tensorflow/
+      #- name: tensorflow-pges
         # minikube mount $PWD/../pges/tensorflow/:/tensorflow/pges/
-        hostPath:
-          path: /tensorflow/pges/
+      #  hostPath:
+      #    path: /tensorflow/pges/
       
