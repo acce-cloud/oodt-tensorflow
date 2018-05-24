@@ -40,16 +40,20 @@ spec:
         - containerPort: 5672
         - containerPort: 15672
         env:
-        # example connection URL for rabbitmq message producers - override as needed
         - name: RABBITMQ_USER_URL
           value: "amqp://oodt-user:changeit@localhost/%2f"
         - name: RABBITMQ_ADMIN_URL
           value: "http://oodt-admin:changeit@localhost:15672"
-        volumeMounts:
-        - name: tensorflow-driver
-          mountPath: /usr/local/oodt/rabbitmq/tensorflow_driver.py
-      volumes:
-      - name: tensorflow-driver
-        # minikube mount $PWD/../rabbitmq_clients/tensorflow_driver.py:/usr/local/oodt/rabbitmq/tensorflow_driver.py
-        hostPath:
-          path: /usr/local/oodt/rabbitmq/tensorflow_driver.py
+      - name: rabbitmq-clients
+        image: acce/oodt-rabbitmq-clients-tensorflow:2.0
+        imagePullPolicy: Always
+        command: ["python", "/usr/local/oodt/rabbitmq/rabbitmq_consumer.py"]
+        args: ["tensorflow", "2"] 
+        # example connection URL for rabbitmq clients - override as needed
+        env:
+        - name: RABBITMQ_USER_URL
+          value: "amqp://oodt-user:changeit@localhost/%2f"
+        - name: RABBITMQ_ADMIN_URL
+          value: "http://oodt-admin:changeit@localhost:15672"
+        - name: WORKFLOW_URL
+          value: http://wmgr:9001

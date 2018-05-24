@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: filemgr
-        image: acce/oodt-filemgr:2.0
+        image: acce/oodt-filemgr-tensorflow:2.0
         ports:
         - containerPort: 9000
         - containerPort: 8983
@@ -44,18 +44,10 @@ spec:
           mountPath: /usr/local/oodt/archive/
         - name: oodt-jobs
           mountPath: /usr/local/oodt/jobs/
-        - name: tensorflow-config
-          mountPath: /usr/local/oodt/workflows/tensorflow
-      volumes:
-      - name: oodt-jobs
-        # minikube mount $HOME/data/jobs/:/usr/local/oodt/jobs/
-        hostPath:
-          path: /usr/local/oodt/jobs
+      volumes: 
       - name: oodt-archive
-        # minikube mount $HOME/data/archive/:/usr/local/oodt/archive/
-        hostPath:
-          path: /usr/local/oodt/archive
-      - name: tensorflow-config
-        # minikube mount $PWD/../workflows/tensorflow/:/workflows/tensorflow/
-        hostPath:
-          path: /workflows/tensorflow/
+        persistentVolumeClaim:  
+          claimName: oodt-archive 
+      - name: oodt-jobs
+        persistentVolumeClaim:  
+          claimName: oodt-jobs      

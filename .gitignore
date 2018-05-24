@@ -9,3 +9,4 @@
 **/.out
 **/jobs
 .project
+.pydevproject

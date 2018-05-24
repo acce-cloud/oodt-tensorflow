@@ -13,4 +13,4 @@ COPY workflows/tensorflow /usr/local/oodt/workflows/tensorflow
 COPY pges/tensorflow /usr/local/oodt/pges/tensorflow
 
 # install supervisor configuration to start the RabbitMQ consumer
-COPY conf/supervisor/supervisord-rmqclient.conf /etc/supervisor/conf.d/supervisord-rmqclient.conf
+#COPY conf/supervisor/supervisord-rmqclient.conf /etc/supervisor/conf.d/supervisord-rmqclient.conf
