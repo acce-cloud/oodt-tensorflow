@@ -7,5 +7,5 @@ FROM acce/oodt-rabbitmq-clients:${ACCE_VERSION}
 
 COPY conf/python/tensorflow_driver.py /usr/local/oodt/rabbitmq/tensorflow_driver.py
 
-# FIXME
-CMD tail -f /dev/null
+# start RabbitMQ consumer daemon listening to the specific queue
+ENTRYPOINT ["python", "/usr/local/oodt/rabbitmq/rabbitmq_consumer.py", "tensorflow", "2"]

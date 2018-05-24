@@ -4,4 +4,4 @@ ARG ACCE_VERSION=latest
 FROM acce/oodt-filemgr:${ACCE_VERSION}
 
 # install OODT configuration for this specific products
-COPY workflows/tensorflow /usr/local/oodt/workflows/tensorflow
+COPY conf/workflows/tensorflow /usr/local/oodt/workflows/tensorflow
