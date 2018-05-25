@@ -13,15 +13,19 @@ spec:
         component: rabbitmq-clients
     spec:
       containers:
-      - name: rabbitmq-clients
+      - name: rabbitmq-producer
         image: acce/oodt-rabbitmq-clients-tensorflow:2.0
         imagePullPolicy: Always
         env:
-        # URLs needed by RabbitMQ producer
         - name: RABBITMQ_USER_URL
           value: "amqp://oodt-user:changeit@rabbitmq/%2f"
         - name: RABBITMQ_ADMIN_URL
           value: "http://oodt-admin:changeit@rabbitmq:15672"
-        # URL needed by RabbitMQ consumer
+      - name: rabbitmq-consumer
+        image: acce/oodt-rabbitmq-clients-tensorflow:2.0
+        imagePullPolicy: Always
+        env:
+        - name: RABBITMQ_USER_URL
+          value: "amqp://oodt-user:changeit@rabbitmq/%2f"
         - name: WORKFLOW_URL
           value: http://wmgr:9001
