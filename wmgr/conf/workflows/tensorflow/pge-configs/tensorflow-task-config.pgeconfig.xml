@@ -6,7 +6,7 @@
 		<!-- load Python virtual environment with tensorflow -->
 		<cmd>. [OODT_VENV]/bin/activate</cmd> -->
 		<!-- execute script  -->
-		<cmd>python [PGE_ROOT]/tensorflow/mnist_softmax.py --data_dir [data_dir] --num_images [num_images] --output_file [output_file]</cmd>
+		<cmd>python [PGE_ROOT]/tensorflow/mnist_softmax.py --data_dir [data_dir] --num_images [num_images] --output_file [output_file]-[HOSTNAME].txt</cmd>
 	</exe>
 
 	<customMetadata>

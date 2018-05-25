@@ -16,16 +16,21 @@ LOG_FILE = "tensorflow_driver.log" # in current directory
 WORKFLOW_NAME = 'tensorflow'
 SLEEP_TIME = 0 # time to wait before sending the next message
 
-def worker(number_of_runs):
+def worker(number_of_runs, number_of_images):
     '''Function that sends the messages to execute the runs.'''
-
+    
     # loop over runs=workflows
     for irun in range(1, number_of_runs+1):
         LOGGER.info("Submitting messages for run #: %s" % irun)
    
         msg_queue = WORKFLOW_NAME
         num_msgs = 1
-        msg_dict = { 'data_dir':'/tmp/MNIST_data', 'num_images':'100', 'output_file':'output-%s.txt' % irun, 'Run':irun }
+        msg_dict = { 
+                    'data_dir':'/tmp/MNIST_data', 
+                    'num_images':'%s' % number_of_images, 
+                    'output_file':'output-%s' % irun, 
+                    'Run':irun 
+                    }
    
         publish_messages(msg_queue, num_msgs, msg_dict)
    
@@ -35,7 +40,7 @@ def worker(number_of_runs):
     return
 
 
-def main(number_of_runs):
+def main(number_of_runs, number_of_images):
     
     logging.basicConfig(level=logging.CRITICAL, format=LOG_FORMAT)
         
@@ -44,7 +49,7 @@ def main(number_of_runs):
 
     # send all messages in a separate thread
     # do not wait till completion
-    t = threading.Thread(target=worker, args=(number_of_runs,))
+    t = threading.Thread(target=worker, args=(number_of_runs, number_of_images, ))
     t.start()
     
     # wait for RabbitMQ server to process all messages in all queues
@@ -63,9 +68,10 @@ def main(number_of_runs):
 if __name__ == '__main__':
     """ Parse command line arguments. """
     
-    if len(sys.argv) < 1:
-        raise Exception("Usage: python tensorflow_driver.py <number_of_runs>")
+    if len(sys.argv) < 2:
+        raise Exception("Usage: python tensorflow_driver.py <number_of_runs> <number_of_images_per_run>")
     else:
         number_of_runs = int( sys.argv[1] )
+        number_of_images = int( sys.argv[2] )
 
-    main(number_of_runs)
+    main(number_of_runs, number_of_images)
