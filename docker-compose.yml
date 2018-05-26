@@ -4,20 +4,33 @@ version: '3.1'
 
 services:
 
-  oodt-filemgr:
-    image: acce/oodt-filemgr:${ACCE_VERSION}
+  # OODT File Manager w/ Solr back-end
+  filemgr:
+    image: acce/oodt-filemgr-tensorflow:${ACCE_VERSION}
     container_name: filemgr
     expose:
       - "9000"
     ports:
       - "9000:9000"
     volumes:
-      - $PWD/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
-      # shared data volumes
-      - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
+      # shared host data volumes
+      - $OODT_JOBS:/usr/local/oodt/jobs
       - $OODT_ARCHIVE:/usr/local/oodt/archive
+    depends_on:
+      - solr
+    
+  # note: Docker service name must match hostname:8983 in filemgr.properties:
+  # org.apache.oodt.cas.filemgr.catalog.solr.url=http://solr:8983/solr/oodt-fm
+  solr:
+    image: acce/oodt-solr:${ACCE_VERSION}
+    container_name: solr
+    expose:
+      - "8983"
+    ports:
+      - "8983:8983"
 
-  oodt-wmgr:
+  # OODT Workflow Manager
+  wmgr:
     image: acce/oodt-wmgr-tensorflow:${ACCE_VERSION}
     container_name: wmgr
     expose:
@@ -25,29 +38,18 @@ services:
     ports:
       - "9001:9001"
     volumes:
-      # workflow specification
-      #- $PWD/workflows/tensorflow/policy:/usr/local/oodt/workflows/tensorflow/policy
-      #- $PWD/workflows/tensorflow/pge-configs:/usr/local/oodt/workflows/tensorflow/pge-configs
-      # executable
-      #- $PWD/pges/tensorflow/mnist_softmax.py:/usr/local/oodt/pges/tensorflow/pges/mnist_softmax.py
-      # custom supervisor configuration which starts the RMQ client
-      #- $PWD/conf/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf
-      # shared data volumes
-      - $OODT_JOBS:/usr/local/oodt/pges/tensorflow/jobs
+      # shared host data volumes
+      - $OODT_JOBS:/usr/local/oodt/jobs
       - $OODT_ARCHIVE:/usr/local/oodt/archive
       - $TENSORFLOW_DATA:/tmp/MNIST_data
     environment:
-      - "FILEMGR_URL=http://oodt-filemgr:9000/"
+      - "FILEMGR_URL=http://filemgr:9000/"
       - "WORKFLOW_URL=http://localhost:9001/"
-      - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@oodt-rabbitmq/%2f"
-      - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@oodt-rabbitmq:15672"
-      - "WORKFLOW_QUEUE=tensorflow"
-      - "MAX_WORKFLOWS=2"
     depends_on:
-      - oodt-rabbitmq
+      - rabbitmq
 
   # RabbitMQ server
-  oodt-rabbitmq:
+  rabbitmq:
     image: acce/oodt-rabbitmq:${ACCE_VERSION}
     container_name: rabbitmq
     expose:
@@ -59,6 +61,17 @@ services:
     environment:
       - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@localhost/%2f"
       - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@localhost:15672"
-    volumes:
-      # driver program to submit workflows
-      - $PWD/rabbitmq_clients/tensorflow_driver.py:/usr/local/oodt/rabbitmq/tensorflow_driver.py
+
+  # RabbitMQ clients
+  rabbitmq-clients: 
+    image: acce/oodt-rabbitmq-clients-tensorflow:${ACCE_VERSION}
+    container_name: rabbitmq-clients
+    environment:
+      - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@rabbitmq/%2f"
+      - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@rabbitmq:15672"
+      - "WORKFLOW_URL=http://wmgr:9001/"
+    depends_on:
+      - rabbitmq
+      - wmgr
+
+      
