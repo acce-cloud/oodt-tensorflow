@@ -21,8 +21,8 @@ spec:
           value: "amqp://oodt-user:changeit@rabbitmq/%2f"
         - name: RABBITMQ_ADMIN_URL
           value: "http://oodt-admin:changeit@rabbitmq:15672"
-        # override entrypoint 
-        entrypoint: ["tail", "-f", "/dev/null"]
+        # execute command to keep the container running
+        command: ["tail", "-f", "/dev/null"]
       - name: rabbitmq-consumer
         image: acce/oodt-rabbitmq-clients-tensorflow:2.0
         imagePullPolicy: Always
