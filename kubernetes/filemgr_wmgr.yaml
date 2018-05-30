@@ -59,7 +59,7 @@ spec:
         - containerPort: 9001
         env:
         - name: FILEMGR_URL
-          value: "http://filemgr:9000/"
+          value: "http://localhost:9000/"
         - name: WORKFLOW_URL
           value: "http://localhost:9001/" 
         volumeMounts:
