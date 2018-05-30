@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: wmgr
-        image: acce/oodt-wmgr-tensorflow:2.0
+        image: acce/oodt-wmgr-tensorflow:3.0
         imagePullPolicy: Always
         ports:
         - containerPort: 9001

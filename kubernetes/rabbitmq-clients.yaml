@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq-producer
-        image: acce/oodt-rabbitmq-clients-tensorflow:2.0
+        image: acce/oodt-rabbitmq-clients-tensorflow:3.0
         imagePullPolicy: Always
         env:
         - name: RABBITMQ_USER_URL
@@ -24,7 +24,7 @@ spec:
         # execute command to keep the container running
         command: ["tail", "-f", "/dev/null"]
       - name: rabbitmq-consumer
-        image: acce/oodt-rabbitmq-clients-tensorflow:2.0
+        image: acce/oodt-rabbitmq-clients-tensorflow:3.0
         imagePullPolicy: Always
         env:
         - name: RABBITMQ_USER_URL

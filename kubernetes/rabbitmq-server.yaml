@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq-server
-        image: acce/oodt-rabbitmq:2.0
+        image: acce/oodt-rabbitmq:3.0
         imagePullPolicy: Always
         ports:
         - containerPort: 5672

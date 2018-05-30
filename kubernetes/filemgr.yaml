@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: filemgr
-        image: acce/oodt-filemgr-tensorflow:2.0
+        image: acce/oodt-filemgr-tensorflow:3.0
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
