@@ -13,13 +13,9 @@ spec:
     targetPort: 9000
     protocol: TCP
     name: xmlrpc
-  - port: 8983
-    targetPort: 8983
-    protocol: TCP
-    name: solr
   selector:
     stack: acce
-    component: filemgr
+    component: filemgr-wmgr
 ---
 apiVersion: v1
 kind: Service
@@ -72,7 +68,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
-        - containerPort: 8983
         volumeMounts:
         - name: oodt-archive 
           mountPath: /usr/local/oodt/archive/
