@@ -5,7 +5,7 @@ metadata:
   name: filemgr
   labels:
     stack: acce
-    component: filemgr-wmgr
+    component: filemgr
 spec:
   type: ClusterIP
   ports:
@@ -27,7 +27,7 @@ metadata:
   name: wmgr
   labels:
     stack: acce
-    component: filemgr-wmgr
+    component: wmgr
 spec:
   type: ClusterIP
   ports: 
