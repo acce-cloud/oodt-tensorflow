@@ -45,10 +45,12 @@ spec:
           mountPath: /usr/local/oodt/archive/
         - name: oodt-jobs
           mountPath: /usr/local/oodt/jobs/
-      volumes:
+      volumes: 
       - name: oodt-archive
-        persistentVolumeClaim:  
-          claimName: oodt-archive 
+        nfs:
+          path: "/data/oodt/archive"
+          server: 10.128.0.8
       - name: oodt-jobs
-        persistentVolumeClaim:  
-          claimName: oodt-jobs      
+        nfs:
+          path: "/data/oodt/jobs"
+          server: 10.128.0.8
