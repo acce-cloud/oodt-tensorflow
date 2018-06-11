@@ -91,6 +91,14 @@ spec:
           mountPath: /usr/local/oodt/archive/
         - name: oodt-jobs
           mountPath: /usr/local/oodt/jobs/
+      - name: rabbitmq-consumer
+        image: acce/oodt-rabbitmq-clients-tensorflow:3.0
+        imagePullPolicy: Always
+        env:
+        - name: RABBITMQ_USER_URL
+          value: "amqp://oodt-user:changeit@rabbitmq/%2f"
+        - name: WORKFLOW_URL
+          value: http://localhost:9001
       volumes:
       - name: oodt-archive
         emptyDir: {}
