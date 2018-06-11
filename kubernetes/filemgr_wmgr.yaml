@@ -47,6 +47,22 @@ spec:
         stack: acce
         component: filemgr-wmgr
     spec:
+      initContainers:
+      - name: data-download
+        image: radial/busyboxplus:curl
+        command:
+          - sh
+          - -c
+          - |
+            mkdir -p /tmp/MNIST_data
+            cd /tmp/MNIST_data
+            curl -O http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+            curl -O http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+            curl -O http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+            curl -O http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+        volumeMounts:
+        - name: mnist-data
+          mountPath: /tmp/MNIST_data
       containers:
       - name: wmgr
         image: acce/oodt-wmgr-tensorflow:3.0
@@ -63,6 +79,8 @@ spec:
           mountPath: /usr/local/oodt/archive/
         - name: oodt-jobs
           mountPath: /usr/local/oodt/jobs/
+        - name: mnist-data
+          mountPath: /tmp/MNIST_data
       - name: filemgr
         image: acce/oodt-filemgr-tensorflow:3.0
         imagePullPolicy: Always
@@ -77,4 +95,6 @@ spec:
       - name: oodt-archive
         emptyDir: {}
       - name: oodt-jobs
+        emptyDir: {}
+      - name: mnist-data
         emptyDir: {}
