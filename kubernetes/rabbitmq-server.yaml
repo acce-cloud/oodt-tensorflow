@@ -40,6 +40,10 @@ spec:
         ports:
         - containerPort: 5672
         - containerPort: 15672
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
       - name: rabbitmq-producer
         image: acce/oodt-rabbitmq-clients-tensorflow:3.0
         imagePullPolicy: Always
@@ -50,3 +54,7 @@ spec:
           value: "http://oodt-admin:changeit@rabbitmq:15672"
         # execute command to keep the container running
         command: ["tail", "-f", "/dev/null"]
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: "100m"

@@ -63,6 +63,10 @@ spec:
         volumeMounts:
         - name: mnist-data
           mountPath: /tmp/MNIST_data
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "200m"
       containers:
       - name: wmgr
         image: acce/oodt-wmgr-tensorflow:3.0
@@ -81,6 +85,10 @@ spec:
           mountPath: /usr/local/oodt/jobs/
         - name: mnist-data
           mountPath: /tmp/MNIST_data
+        resources:
+          limits:
+            memory: "8Gi"
+            cpu: "500m"
       - name: filemgr
         image: acce/oodt-filemgr-tensorflow:3.0
         imagePullPolicy: Always
@@ -91,6 +99,10 @@ spec:
           mountPath: /usr/local/oodt/archive/
         - name: oodt-jobs
           mountPath: /usr/local/oodt/jobs/
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "250m"
       - name: rabbitmq-consumer
         image: acce/oodt-rabbitmq-clients-tensorflow:3.0
         imagePullPolicy: Always
@@ -99,6 +111,10 @@ spec:
           value: "amqp://oodt-user:changeit@rabbitmq/%2f"
         - name: WORKFLOW_URL
           value: http://localhost:9001
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "250m"
       volumes:
       - name: oodt-archive
         emptyDir: {}
