@@ -8,6 +8,10 @@ services:
   filemgr:
     image: acce/oodt-filemgr-tensorflow:${ACCE_VERSION}
     container_name: filemgr
+    build:
+      context: ./filemgr
+      args:
+        - ACCE_VERSION
     expose:
       - "9000"
     ports:
@@ -33,6 +37,10 @@ services:
   wmgr:
     image: acce/oodt-wmgr-tensorflow:${ACCE_VERSION}
     container_name: wmgr
+    build:
+      context: ./wmgr
+      args:
+        - ACCE_VERSION
     expose:
       - "9001"
     ports:
@@ -66,6 +74,10 @@ services:
   rabbitmq-clients: 
     image: acce/oodt-rabbitmq-clients-tensorflow:${ACCE_VERSION}
     container_name: rabbitmq-clients
+    build:
+      context: ./rabbitmq-clients
+      args:
+        - ACCE_VERSION
     environment:
       - "RABBITMQ_USER_URL=amqp://oodt-user:changeit@rabbitmq/%2f"
       - "RABBITMQ_ADMIN_URL=http://oodt-admin:changeit@rabbitmq:15672"
