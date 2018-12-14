@@ -30,22 +30,20 @@ spec:
         component: filemgr
     spec:
       containers:
-      - name: filemgr
-        image: acce/oodt-filemgr-tensorflow:3.0
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 9000
-        volumeMounts:
-        - name: oodt-archive 
-          mountPath: /usr/local/oodt/archive/
-        - name: oodt-jobs
-          mountPath: /usr/local/oodt/jobs/
+        - name: filemgr
+          image: acce/oodt-filemgr-tensorflow:3.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: oodt-archive 
+              mountPath: /usr/local/oodt/archive/
+            - name: oodt-jobs
+              mountPath: /usr/local/oodt/jobs/
       volumes: 
-      - name: oodt-archive
-        nfs:
-          path: "/data/oodt/archive"
-          server: 10.128.0.8
-      - name: oodt-jobs
-        nfs:
-          path: "/data/oodt/jobs"
-          server: 10.128.0.8
+        - name: oodt-archive
+          persistentVolumeClaim:
+            claimName: oodt-archive
+        - name: oodt-jobs
+          persistentVolumeClaim:
+            claimName: oodt-jobs
