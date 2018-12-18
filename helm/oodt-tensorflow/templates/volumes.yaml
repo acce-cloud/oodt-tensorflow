@@ -1,0 +1,26 @@
+# Persistent volumes shared across pods
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: oodt-archive
+  labels:
+    stack: acce
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: oodt-jobs
+  labels:
+    stack: acce
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

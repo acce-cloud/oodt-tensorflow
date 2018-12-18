@@ -1,0 +1,55 @@
+# Kubernetes deployment file for OODT Workflow Manager server
+apiVersion: v1
+kind: Service
+metadata:
+  name: wmgr
+  labels:
+    stack: acce
+    component: wmgr
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9001
+    targetPort: 9001
+    protocol: TCP
+    name: xmlrpc
+  selector:
+    stack: acce
+    component: wmgr
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: oodt-wmgr
+spec:
+  replicas: {{ .Values.wmgr.replicas }}
+  template:
+    metadata:
+      labels:
+        stack: acce
+        component: wmgr
+    spec:
+      containers:
+      - name: wmgr
+        # image: acce/oodt-wmgr-tensorflow:3.0
+        image: "{{ .Values.wmgr.image }}:{{ .Values.wmgr.tag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9001
+        env:
+        - name: FILEMGR_URL
+          value: "http://filemgr:9000/"
+        - name: WORKFLOW_URL
+          value: "http://localhost:9001/" 
+        volumeMounts:
+        - name: oodt-archive 
+          mountPath: /usr/local/oodt/archive/
+        - name: oodt-jobs
+          mountPath: /usr/local/oodt/jobs/
+      volumes: 
+      - name: oodt-archive
+        persistentVolumeClaim:
+          claimName: oodt-archive
+      - name: oodt-jobs
+        persistentVolumeClaim:
+          claimName: oodt-jobs

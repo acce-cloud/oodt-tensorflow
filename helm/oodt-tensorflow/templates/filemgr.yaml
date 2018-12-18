@@ -1,0 +1,50 @@
+# Kubernetes deployment file for OODT File Manager server
+apiVersion: v1
+kind: Service
+metadata:
+  name: filemgr
+  labels:
+    stack: acce
+    component: filemgr
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
+    name: xmlrpc
+  selector:
+    stack: acce
+    component: filemgr
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: oodt-filemgr
+spec:
+  replicas: {{ .Values.filemgr.replicas }}
+  template:
+    metadata:
+      labels:
+        stack: acce
+        component: filemgr
+    spec:
+      containers:
+        - name: filemgr
+          # image: acce/oodt-filemgr-tensorflow:3.0
+          image: "{{ .Values.filemgr.image }}:{{ .Values.filemgr.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: oodt-archive 
+              mountPath: /usr/local/oodt/archive/
+            - name: oodt-jobs
+              mountPath: /usr/local/oodt/jobs/
+      volumes: 
+        - name: oodt-archive
+          persistentVolumeClaim:
+            claimName: oodt-archive
+        - name: oodt-jobs
+          persistentVolumeClaim:
+            claimName: oodt-jobs

@@ -1,0 +1,42 @@
+# Kubernetes deployment file for Solr woth OODT configuration
+apiVersion: v1
+kind: Service
+metadata:
+  name: solr
+  labels:
+    stack: acce
+    component: solr
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8983
+    targetPort: 8983
+    protocol: TCP
+    name: solr
+  selector:
+    stack: acce
+    component: solr
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: solr
+spec:
+  replicas: {{ .Values.solr.replicas }}
+  template:
+    metadata:
+      labels:
+        stack: acce
+        component: solr
+    spec:
+      containers:
+      - name: solr
+        # image: acce/oodt-solr:3.0
+        image: "{{ .Values.solr.image }}:{{ .Values.solr.tag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8983
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "100m"

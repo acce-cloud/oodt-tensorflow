@@ -1,0 +1,33 @@
+# Kubernetes deployment file for OODT RabbitMQ clients
+# (the same container hosts the message producer and consumer)
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: oodt-rabbitmq-clients
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        stack: acce
+        component: rabbitmq-clients
+    spec:
+      containers:
+      - name: rabbitmq-producer
+        image: acce/oodt-rabbitmq-clients-tensorflow:3.0
+        imagePullPolicy: Always
+        env:
+        - name: RABBITMQ_USER_URL
+          value: "amqp://oodt-user:changeit@rabbitmq/%2f"
+        - name: RABBITMQ_ADMIN_URL
+          value: "http://oodt-admin:changeit@rabbitmq:15672"
+        # execute command to keep the container running
+        command: ["tail", "-f", "/dev/null"]
+      - name: rabbitmq-consumer
+        image: acce/oodt-rabbitmq-clients-tensorflow:3.0
+        imagePullPolicy: Always
+        env:
+        - name: RABBITMQ_USER_URL
+          value: "amqp://oodt-user:changeit@rabbitmq/%2f"
+        - name: WORKFLOW_URL
+          value: http://wmgr:9001

@@ -1,0 +1,15 @@
+# K8s ingress to make RabbitMQ UI available to administrators
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: acce-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rabbitmq
+          servicePort: 15672
