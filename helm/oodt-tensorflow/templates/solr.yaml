@@ -35,8 +35,11 @@ spec:
         image: "{{ .Values.solr.image }}:{{ .Values.solr.tag }}"
         imagePullPolicy: Always
         ports:
-        - containerPort: 8983
+          - containerPort: 8983
         resources:
           limits:
-            memory: "1Gi"
-            cpu: "100m"
+            memory: "{{ .Values.solr.resources.limits.memory }}"
+            cpu: "{{ .Values.solr.resources.limits.cpu }}"
+          requests:
+            memory: "{{ .Values.solr.resources.requests.memory }}"
+            cpu: "{{ .Values.solr.resources.requests.cpu }}"

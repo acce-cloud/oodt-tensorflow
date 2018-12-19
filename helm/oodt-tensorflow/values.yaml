@@ -2,13 +2,30 @@
 
 replicaCount: 1
 
-image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+wmgr:
+  image: acce/oodt-wmgr-tensorflow
+  tag: "3.0"
+  replicas: 1
+  
+filemgr:
+  image: acce/oodt-filemgr-tensorflow
+  tag: "3.0"
+  replicas: 1
+  
+solr:
+  image: acce/oodt-solr
+  tag: "3.0"
+  replicas: 1
+  
+rabbitmq_server:
+  image: acce/oodt-rabbitmq
+  rag: "3.0"
+  replicas: 1
 
-nameOverride: ""
-fullnameOverride: ""
+rabbitmq_consumer:
+  image: acce/oodt-rabbitmq-clients-tensorflow
+  rag: "3.0"
+  replicas: 1
 
 service:
   type: ClusterIP
@@ -44,17 +61,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-
-wmgr:
-  image: acce/oodt-wmgr-tensorflow
-  tag: "3.0"
-  replicas: 1
-filemgr:
-  image: acce/oodt-filemgr-tensorflow
-  tag: "3.0"
-  replicas: 1
-solr:
-  image: acce/oodt-solr
-  tag: "3.0"
-  replicas: 1

@@ -4,6 +4,17 @@ version: '3.1'
 
 services:
 
+  # init container the
+  data-download:
+    image: busybox
+    container_name: data-download
+    entrypoint: /usr/local/bin/data_download.sh
+    environment: 
+      - TENSORFLOW_DATA=/tmp/MNIST_data
+    volumes:
+      - $PWD/data-download/conf/scripts/data_download.sh:/usr/local/bin/data_download.sh
+      - tensorflow_data:/tmp/MNIST_data
+
   # OODT File Manager w/ Solr back-end
   filemgr:
     image: acce/oodt-filemgr-tensorflow:${ACCE_VERSION}
@@ -49,11 +60,12 @@ services:
       # shared host data volumes
       - $OODT_JOBS:/usr/local/oodt/jobs
       - $OODT_ARCHIVE:/usr/local/oodt/archive
-      - $TENSORFLOW_DATA:/tmp/MNIST_data
+      - tensorflow_data:/tmp/MNIST_data
     environment:
       - "FILEMGR_URL=http://filemgr:9000/"
       - "WORKFLOW_URL=http://localhost:9001/"
     depends_on:
+      - data-download
       - rabbitmq
 
   # RabbitMQ server
@@ -85,5 +97,8 @@ services:
     depends_on:
       - rabbitmq
       - wmgr
+      
+volumes:
+  tensorflow_data:
 
       

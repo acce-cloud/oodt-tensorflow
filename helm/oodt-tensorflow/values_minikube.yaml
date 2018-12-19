@@ -1,0 +1,16 @@
+# Default values for oodt-tensorflow.
+
+
+wmgr:
+  image: acce/oodt-wmgr-tensorflow
+  tag: "3.0"
+  replicas: 5
+  
+solr:
+  resources:
+    limits:
+      memory: "1Gi"
+      cpu: "100m"
+    requests:
+      memory: "1Gi"
+      cpu: "100m"

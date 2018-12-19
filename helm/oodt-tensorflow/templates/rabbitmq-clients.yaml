@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   name: oodt-rabbitmq-clients
 spec:
-  replicas: 1
+  replicas: {{ .Values.rabbitmq_consumer.replicas }}
   template:
     metadata:
       labels:
@@ -24,7 +24,7 @@ spec:
         # execute command to keep the container running
         command: ["tail", "-f", "/dev/null"]
       - name: rabbitmq-consumer
-        image: acce/oodt-rabbitmq-clients-tensorflow:3.0
+        image: "{{ .Values.rabbitmq_consumer.image }}:{{ .Values.rabbitmq_consumer.tag }}"
         imagePullPolicy: Always
         env:
         - name: RABBITMQ_USER_URL

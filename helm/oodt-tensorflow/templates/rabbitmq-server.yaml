@@ -26,7 +26,7 @@ kind: Deployment
 metadata:
   name: oodt-rabbitmq-server
 spec:
-  replicas: 1
+  replicas: {{ .Values.rabbitmq_server.replicas }}
   template:
     metadata:
       labels:
@@ -35,7 +35,8 @@ spec:
     spec:
       containers:
       - name: rabbitmq-server
-        image: acce/oodt-rabbitmq:3.0
+        # image: acce/oodt-rabbitmq:3.0
+        image: "{{ .Values.rabbitmq_server.image }}:{{ .Values.rabbitmq_server.tag }}"
         imagePullPolicy: Always
         ports:
         - containerPort: 5672
