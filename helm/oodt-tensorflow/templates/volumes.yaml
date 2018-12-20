@@ -7,10 +7,10 @@ metadata:
     stack: acce
 spec:
   accessModes:
-    - ReadWriteMany
+    - "{{ .Values.storage.accessModes }}"
   resources:
     requests:
-      storage: 1Gi
+      storage: "{{ .Values.storage.size.archive }}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,7 +20,7 @@ metadata:
     stack: acce
 spec:
   accessModes:
-    - ReadWriteMany
+    - "{{ .Values.storage.accessModes }}"
   resources:
     requests:
-      storage: 1Gi
+      storage: "{{ .Values.storage.size.jobs }}"

@@ -1,0 +1,19 @@
+# Specific configuration for running the OODT-Tensorflow application on Google Kubernetes Engine
+
+ingress:
+  enabled: false
+  
+solr:
+  resources:
+    limits:
+      memory: "1Gi"
+      cpu: "200m"
+    requests:
+      memory: "1Gi"
+      cpu: "200m"
+      
+storage:
+  accessModes: ReadWriteOnce
+  size:
+    jobs: "10Gi"
+    archive: "10Gi"
