@@ -19,12 +19,12 @@ solr:
   
 rabbitmq_server:
   image: acce/oodt-rabbitmq
-  rag: "3.0"
+  tag: "3.0"
   replicas: 1
 
-rabbitmq_consumer:
+rabbitmq_clients:
   image: acce/oodt-rabbitmq-clients-tensorflow
-  rag: "3.0"
+  tag: "3.0"
   replicas: 1
 
 service:

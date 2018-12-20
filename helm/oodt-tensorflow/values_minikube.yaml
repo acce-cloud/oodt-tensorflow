@@ -4,7 +4,7 @@
 wmgr:
   image: acce/oodt-wmgr-tensorflow
   tag: "3.0"
-  replicas: 5
+  replicas: 2
   
 solr:
   resources:
