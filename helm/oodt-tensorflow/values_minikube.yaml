@@ -1,5 +1,7 @@
-# Default values for oodt-tensorflow.
+# Specific configuration for running the OODT-Tensorflow application on Minikube
 
+ingress:
+  enabled: true
 
 wmgr:
   image: acce/oodt-wmgr-tensorflow
